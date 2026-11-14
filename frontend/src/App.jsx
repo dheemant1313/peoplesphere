@@ -8,6 +8,7 @@ import DashboardShell from './pages/DashboardShell';
 import ModulePlaceholder from './pages/ModulePlaceholder';
 import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
 
 export default function App() {
   return (
@@ -16,12 +17,14 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-              {/* Public & Auth Routes */}
+              {/* Public Website Routes */}
+              <Route path="/" element={<LandingPage />} />
               <Route path="/landing" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-              {/* Main Authenticated Workforce App */}
-              <Route path="/" element={<AppLayout />}>
+              {/* Authenticated Workspace Suite */}
+              <Route path="/app" element={<AppLayout />}>
                 <Route index element={<DashboardShell />} />
                 <Route
                   path="employees"
@@ -122,8 +125,22 @@ export default function App() {
                     />
                   }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
+
+              {/* Backward-compatible top-level redirects */}
+              <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+              <Route path="/employees" element={<Navigate to="/app/employees" replace />} />
+              <Route path="/attendance" element={<Navigate to="/app/attendance" replace />} />
+              <Route path="/shifts" element={<Navigate to="/app/shifts" replace />} />
+              <Route path="/leave" element={<Navigate to="/app/leave" replace />} />
+              <Route path="/salary" element={<Navigate to="/app/salary" replace />} />
+              <Route path="/payroll" element={<Navigate to="/app/payroll" replace />} />
+              <Route path="/reports" element={<Navigate to="/app/reports" replace />} />
+              <Route path="/settings" element={<Navigate to="/app/settings" replace />} />
+              <Route path="/audit" element={<Navigate to="/app/audit" replace />} />
+
+              {/* Catch-all fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>

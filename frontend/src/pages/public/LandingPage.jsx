@@ -1,70 +1,80 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, Building2, GraduationCap, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import Navbar from './Navbar';
+import HeroSection from './HeroSection';
+import FeaturesSection from './FeaturesSection';
+import SolutionsSection from './SolutionsSection';
+import HowItWorksSection from './HowItWorksSection';
+import BenefitsSection from './BenefitsSection';
+import FaqSection from './FaqSection';
+import ContactSection from './ContactSection';
+import Footer from './Footer';
+import { PolicyModal } from '../../components/common/PolicyModal';
 
 export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between font-sans">
-      {/* Navbar */}
-      <header className="h-20 border-b border-slate-100 px-6 max-w-7xl mx-auto w-full flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
-            PS
-          </div>
-          <div>
-            <span className="font-bold text-base tracking-tight text-slate-900">PeopleSphere</span>
-            <span className="text-[10px] ml-1.5 px-1.5 py-0.2 bg-brand-50 text-brand-700 font-mono rounded border border-brand-200/60">
-              HRMS
-            </span>
-          </div>
-        </div>
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: '',
+    type: 'privacy'
+  });
 
-        <div className="flex items-center space-x-4">
-          <Link
-            to="/login"
-            className="text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/"
-            className="px-4 py-2 bg-brand-600 text-white rounded-lg text-xs font-medium hover:bg-brand-700 transition-colors shadow-sm"
-          >
-            Open Dashboard
-          </Link>
-        </div>
-      </header>
+  const handleOpenPrivacy = () => {
+    setModalState({
+      isOpen: true,
+      title: 'PeopleSphere HRMS — Privacy Policy & Data Governance',
+      type: 'privacy'
+    });
+  };
+
+  const handleOpenTerms = () => {
+    setModalState({
+      isOpen: true,
+      title: 'PeopleSphere HRMS — Enterprise Terms of Service',
+      type: 'terms'
+    });
+  };
+
+  const handleCloseModal = () => {
+    setModalState({ isOpen: false, title: '', type: 'privacy' });
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-brand-500 selection:text-white">
+      {/* Sticky Navigation Bar */}
+      <Navbar />
 
       {/* Hero Section */}
-      <main className="max-w-5xl mx-auto px-6 py-20 text-center space-y-6">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-700 border border-brand-200/60">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Enterprise Workforce & Payroll Platform</span>
-        </div>
+      <div id="home">
+        <HeroSection />
+      </div>
 
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight max-w-3xl mx-auto leading-tight">
-          People Management, Made Simple.
-        </h1>
+      {/* 6 Core Feature Pillars */}
+      <FeaturesSection />
 
-        <p className="text-base text-slate-600 max-w-2xl mx-auto">
-          Manage employees, attendance, leave and payroll through one intelligent workforce management platform designed for colleges, universities, and corporate companies.
-        </p>
+      {/* College & University vs Corporate Company Solutions */}
+      <SolutionsSection />
 
-        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            to="/"
-            className="w-full sm:w-auto px-6 py-3 bg-brand-600 text-white text-sm font-semibold rounded-lg hover:bg-brand-700 transition-all shadow-md flex items-center justify-center space-x-2"
-          >
-            <span>Launch Workspaces</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </main>
+      {/* 4-Step How It Works */}
+      <HowItWorksSection />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 py-6 text-center text-xs text-slate-400">
-        PeopleSphere HRMS • "People First. Management Smarter."
-      </footer>
+      {/* Proven Enterprise Benefits & ROI Metrics */}
+      <BenefitsSection />
+
+      {/* Accordion FAQ */}
+      <FaqSection />
+
+      {/* Validated Contact / Demo Request Form */}
+      <ContactSection />
+
+      {/* Global Footer */}
+      <Footer onOpenPrivacy={handleOpenPrivacy} onOpenTerms={handleOpenTerms} />
+
+      {/* Interactive Policy & Terms Modal */}
+      <PolicyModal
+        isOpen={modalState.isOpen}
+        onClose={handleCloseModal}
+        title={modalState.title}
+        type={modalState.type}
+      />
     </div>
   );
 }
