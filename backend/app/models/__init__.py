@@ -3,6 +3,7 @@ from app.core.database import Base
 from app.models.base import TimestampMixin, TenantMixin, SoftDeleteMixin
 from app.models.organization import Organization, OrganizationSetting
 from app.models.user import User, Role, Permission, RolePermission
+from app.models.auth_tokens import RefreshToken, PasswordResetToken, UserInvitation
 from app.models.employee import Department, Designation, Employee, EmployeeDocument
 from app.models.shift import Shift, EmployeeShiftAssignment
 from app.models.attendance import Attendance, AttendanceCorrection
@@ -24,6 +25,9 @@ __all__ = [
     "Role",
     "Permission",
     "RolePermission",
+    "RefreshToken",
+    "PasswordResetToken",
+    "UserInvitation",
     "Department",
     "Designation",
     "Employee",

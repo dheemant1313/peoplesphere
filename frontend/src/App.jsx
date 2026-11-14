@@ -3,12 +3,18 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { ToastProvider } from './context/ToastContext';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './routes/ProtectedRoute';
+import RoleRoute from './routes/RoleRoute';
 import AppLayout from './components/layout/AppLayout';
 import DashboardShell from './pages/DashboardShell';
 import ModulePlaceholder from './pages/ModulePlaceholder';
 import LandingPage from './pages/public/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import InvitationAcceptPage from './pages/auth/InvitationAcceptPage';
+import UnauthorizedPage from './pages/auth/UnauthorizedPage';
 
 export default function App() {
   return (
@@ -20,11 +26,25 @@ export default function App() {
               {/* Public Website Routes */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/landing" element={<LandingPage />} />
+
+              {/* Authentication & Onboarding Routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/invite/:token" element={<InvitationAcceptPage />} />
+              <Route path="/accept-invitation/:token" element={<InvitationAcceptPage />} />
+              <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-              {/* Authenticated Workspace Suite */}
-              <Route path="/app" element={<AppLayout />}>
+              {/* Authenticated Workspace Suite (Protected) */}
+              <Route
+                path="/app"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
                 <Route index element={<DashboardShell />} />
                 <Route
                   path="employees"
@@ -117,12 +137,14 @@ export default function App() {
                 <Route
                   path="audit"
                   element={
-                    <ModulePlaceholder
-                      title="Audit Trail & System Security"
-                      description="Comprehensive audit logging of all sensitive administrative actions, logins, and payroll changes."
-                      moduleNumber="18"
-                      nextPhase="Phase 10"
-                    />
+                    <RoleRoute allowedRoles={['organization-admin', 'platform_admin', 'hr']}>
+                      <ModulePlaceholder
+                        title="Audit Trail & System Security"
+                        description="Comprehensive audit logging of all sensitive administrative actions, logins, and payroll changes."
+                        moduleNumber="18"
+                        nextPhase="Phase 10"
+                      />
+                    </RoleRoute>
                   }
                 />
               </Route>

@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Union
 import bcrypt
@@ -58,6 +59,7 @@ def create_refresh_token(subject: Union[str, Any]) -> str:
     expire = now + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {
         "sub": str(subject),
+        "jti": uuid.uuid4().hex,
         "exp": expire,
         "iat": now,
         "type": "refresh",
