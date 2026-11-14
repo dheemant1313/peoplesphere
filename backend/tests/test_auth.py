@@ -5,17 +5,9 @@ from app.models.user import User
 from app.core.security import get_password_hash
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def ensure_clean_admin_credentials():
-    """Ensure admin@apexcorp.io always has password ApexAdmin@2026 before and after tests."""
-    db = SessionLocal()
-    try:
-        admin = db.query(User).filter(User.email == "admin@apexcorp.io").first()
-        if admin:
-            admin.hashed_password = get_password_hash("ApexAdmin@2026")
-            db.commit()
-    finally:
-        db.close()
+    """Ensure admin@apexcorp.io has password ApexAdmin@2026 after password reset tests."""
     yield
     db = SessionLocal()
     try:
@@ -91,7 +83,7 @@ def test_refresh_token_rotation_and_revocation(client):
     assert "revoked" in reuse_resp.json()["message"].lower()
 
 
-def test_password_reset_and_reuse_prevention(client):
+def test_password_reset_and_reuse_prevention(client, ensure_clean_admin_credentials):
     """Password reset token functions once and cannot be reused."""
     # 1. Request reset token
     req_resp = client.post("/api/v1/auth/forgot-password", json={"email": "admin@apexcorp.io"})
